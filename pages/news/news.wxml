@@ -1,2 +1,35 @@
 <!--pages/news/news.wxml-->
-<text>pages/news/news.wxml</text>
+<view>
+    <swiper vertical="{{false}}" autoplay="true" interval="5000" indicator-dots="true">
+        <swiper-item>
+            <image src="/images/news/car.jpg"></image>
+            <text>世界上最有钱的国家之一 国民却买不起汽车</text>
+        </swiper-item>
+        <swiper-item>
+            <image src="/images/news/tang.jpg"></image>
+            <text>唐嫣现身美得发光 黑衣红唇气质飙升</text>
+        </swiper-item>
+        <swiper-item>
+            <image src="/images/news/love.jpg"></image>
+            <text>爱情的本质 被佛陀一语道破!</text>
+        </swiper-item>
+    </swiper>
+</view>
+<block wx:for="{{newsData}}" >
+    <view class="news-container">
+        <view class="news-author-date">
+            <image class="news-author" src="{{item.avatar}}" style="width:60rpx;height:60rpx"></image>
+            <text class="news-date">{{item.date}}</text>
+        </view>
+        <text class="news-title">{{item.title}}</text>
+        <image class="news-image" src="{{item.imgSrc}}"></image>
+        <text class="news-content">{{item.content}}</text>
+        <view class="news-like">
+            <image class="news-like-image" src="/images/icon/chat.png"></image>
+            <text class="news-like-font">{{item.collection}}</text>
+            <image class="news-like-image" src="/images/icon/view.png"></image>
+            <text class="news-like-font">{{item.reading}}</text>
+        </view>
+    </view>
+</block>
+
