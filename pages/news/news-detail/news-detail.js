@@ -1,5 +1,6 @@
 // pages/news/news-detail/news-detail.js
 var newsData = require('../../../data/news-data.js');
+var app = getApp();
 
 Page({
 
@@ -36,24 +37,57 @@ Page({
       var newsCollected = {};
       newsCollected[newsId] = false;
       wx.setStorageSync('newsCollected', newsCollected)
-    }
+    };
+
+    if (app.globalData.isPlayingMusic && app.globalData.currentMusicNewsId == newsId){
+      this.setData({
+        isPlayingMusic:true
+      })
+    };
     this.setMusicMonitor();
   },
   setMusicMonitor:function(){
     var that = this;
-    wx.onBackgroundAudioPlay(function(){
-      that.setData({
-        isPlayingMusic : true
-      })
+
+
+    wx.onBackgroundAudioPlay(function(){      
+      var pages = getCurrentPages();
+      var currentPage = pages[pages.length-1];
+      if (currentPage.data.newsId===that.data.newsId){
+        if (app.globalData.currentMusicNewsId==that.data.newsId){
+          that.setData({
+            isPlayingMusic: true
+          });
+        }
+      }
+      app.globalData.isPlayingMusic = true;     
+      
     });
+
+
     wx.onBackgroundAudioPause(function(){
+      var pages = getCurrentPages();
+      var currentPage = pages[pages.length - 1];
+      if (currentPage.data.newsId === that.data.newsId) {
+        if (app.globalData.currentMusicNewsId == that.data.newsId) {
+          that.setData({
+            isPlayingMusic: false
+          });
+        }
+      }
+      app.globalData.isPlayingMusic = false;      
+    });
+
+    wx.onBackgroundAudioStop(function () {
       that.setData({
         isPlayingMusic: false
       })
+      app.globalData.isPlayingMusic = false;  
+      app.globalData.currentMusicNewsId = null;
     });
-
   },
-  onColletionTap: function () {
+
+  onColletionTap:function () {
     this.showToast();
     // this.showModal();
   },
@@ -122,7 +156,7 @@ Page({
         isPlayingMusic:true
       })
     }
-    
+    app.globalData.currentMusicNewsId = this.data.newsId;
 
   },
   // 定义页面的转发功能
