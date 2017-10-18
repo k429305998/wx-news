@@ -17,7 +17,12 @@ Page({
       newsData: newsData.newsList
     })
   },
-
+  onNewsTap:function(event){
+    var newsId = event.currentTarget.dataset.newsid;
+    wx.navigateTo({
+      url: 'news-detail/news-detail?id=' + newsId,
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

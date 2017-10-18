@@ -17,6 +17,8 @@
     </swiper>
 </view>
 <block wx:for="{{newsData}}" >
-    <template is="newsItem" data="{{...item}}" />
+    <view catchtap="onNewsTap" data-newsId = "{{item.newsId}}" >
+      <template is="newsItem" data="{{...item}}"/>
+    </view>
 </block>
 
