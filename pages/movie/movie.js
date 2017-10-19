@@ -1,66 +1,53 @@
 // pages/movie/movie.js
+var utils = require('../../utils/utils');
+var app = getApp();
+var doubanBase = app.globalData.doubanBase;
 Page({
 
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+      "inTheaters":{},
+      "comingSoon":{},
+      "top250":{}
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {   
-    console.log("页面加载")
+  onLoad: function (options) {
+    var that = this;
+    var inTheatersUrl = doubanBase+"/v2/movie/in_theaters?start=0&count=3";
+    var comingSoonUrl = doubanBase+"/v2/movie/coming_soon?start=0&count=3";
+    var top250Url = doubanBase+"/v2/movie/top250?start=0&count=3";
+    this.getMovieListData(inTheatersUrl,"inTheaters","正在热映");
+    this.getMovieListData(comingSoonUrl,"comingSoon","即将上映");
+    this.getMovieListData(top250Url,"top250","top250");
   },
+    getMovieListData:function(url,key,title){
+        var that = this;
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-    console.log("页面初次渲染完成")
-  },
+        utils.http(url,function(data){
+            that.processDoubanData(data,key,title)
+        });
+    },
+    processDoubanData:function(moviesDouban,key,title){
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    console.log("页面显示")
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-    console.log('页面隐藏')
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-    console.log('页面卸载')
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  }
+        var movies = [];
+        for(var index in moviesDouban.subjects){
+            var subject = moviesDouban.subjects[index];
+            var movieTitle = subject.title;
+            if(movieTitle.length>6){
+                movieTitle = movieTitle.substring(0,6)+"...";
+            }
+            var temp = {
+                stars:utils.convertToStarsArray(subject.rating.stars),
+                movieTitle:movieTitle,
+                average:subject.rating.average,
+                movieId:subject.id,
+                coverageUrl:subject.images.large
+            };
+            movies.push(temp);
+        }
+        var readyData ={};
+        readyData[key]={
+            "movies":movies,
+            "title":title
+        };
+        this.setData(readyData);
+    }
 })
