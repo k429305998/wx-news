@@ -1,0 +1,4 @@
+@import "../each-movie/each-movie.wxss";
+.grid-container{
+    
+}

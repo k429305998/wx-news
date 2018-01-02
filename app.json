@@ -3,6 +3,7 @@
     "pages/news/news",
     "pages/movie/movie",
     "pages/index/index",
+   
     "pages/news/news-detail/news-detail",
     "pages/movie/movie-detail/movie-detail",
     "pages/movie/movie-more/movie-more"
